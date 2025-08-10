@@ -9,12 +9,20 @@
   "scripts": {
     "test": "echo \"No tests specified\" && exit 0",
     "lint": "echo \"No linting configured\" && exit 0",
-    "prepack": "echo \"Preparing package for publication...\""
+    "prepack": "npm run lint && npm test",
+    "prepublishOnly": "node scripts/pre-publish-check.js",
+    "prepublish-check": "node scripts/pre-publish-check.js",
+    "release:patch": "node scripts/release.js patch",
+    "release:minor": "node scripts/release.js minor", 
+    "release:major": "node scripts/release.js major",
+    "release": "node scripts/release.js",
+    "ci": "npm ci && npm run lint && npm test"
   },
   "files": [
     "index.js",
-    "README.md",
-    "LICENSE"
+    "README.md", 
+    "LICENSE",
+    "scripts/"
   ],
   "keywords": [
     "shell",
@@ -38,5 +46,9 @@
   "bugs": {
     "url": "https://github.com/terrysoy/ccshell/issues"
   },
-  "homepage": "https://github.com/terrysoy/ccshell#readme"
+  "homepage": "https://github.com/terrysoy/ccshell#readme",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }
