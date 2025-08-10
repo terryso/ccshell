@@ -29,16 +29,34 @@ try {
   const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
   const version = pkg.version;
 
-  // Step 4: Commit changes
+  // Step 4: Get recent commits for changelog
+  console.log('\n📝 Preparing commit message...');
+  let recentChanges = '';
+  try {
+    const lastTag = execSync('git describe --tags --abbrev=0 2>/dev/null || echo ""', { encoding: 'utf8' }).trim();
+    if (lastTag) {
+      const commits = execSync(`git log ${lastTag}..HEAD --pretty=format:"- %s" --no-merges`, { encoding: 'utf8' }).trim();
+      if (commits) {
+        recentChanges = `
+
+Recent changes since ${lastTag}:
+${commits}`;
+      }
+    }
+  } catch (error) {
+    console.log('  ℹ️  No previous tags found, this might be the first release');
+  }
+
+  // Step 5: Commit changes
   console.log('\n📝 Committing changes...');
   execSync('git add package.json package-lock.json', { stdio: 'inherit' });
-  execSync(`git commit -m "chore: bump version to v${version}
+  execSync(`git commit -m "chore: bump version to v${version}${recentChanges}
 
 🤖 Generated with [Claude Code](https://claude.ai/code)
 
 Co-Authored-By: Claude <noreply@anthropic.com>"`, { stdio: 'inherit' });
 
-  // Step 5: Create and push tag
+  // Step 6: Create and push tag
   console.log('\n🏷️  Creating and pushing tag...');
   execSync(`git tag v${version}`, { stdio: 'inherit' });
   execSync('git push origin develop', { stdio: 'inherit' });

@@ -78,43 +78,94 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch all history for tags and commits
       
     - name: Get version from tag
       id: get_version
       run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      
+    - name: Get previous tag
+      id: get_previous_tag
+      run: |
+        # Get all tags sorted by version, exclude current tag, get the previous one
+        CURRENT_TAG="${GITHUB_REF#refs/tags/}"
+        PREVIOUS_TAG=$(git tag -l | grep -v "^${CURRENT_TAG}$" | sort -V | tail -1 || echo "")
+        echo "PREVIOUS_TAG=${PREVIOUS_TAG}" >> $GITHUB_OUTPUT
+        
+    - name: Generate changelog
+      id: changelog
+      run: |
+        VERSION="${{ steps.get_version.outputs.VERSION }}"
+        PREVIOUS_TAG="${{ steps.get_previous_tag.outputs.PREVIOUS_TAG }}"
+        
+        # Start building the changelog
+        {
+          echo "## ccshell v${VERSION} Release"
+          echo ""
+          echo "🤖 **自然语言macOS shell命令接口** | **Natural Language macOS Shell Command Interface**"
+          echo ""
+          
+          # Generate commit-based changelog
+          if [ -n "${PREVIOUS_TAG}" ]; then
+            echo "### 🔄 Changes since ${PREVIOUS_TAG}"
+            echo ""
+            # Get commits between tags, filter out version bumps
+            git log "${PREVIOUS_TAG}..HEAD" --pretty=format:"- %s" --no-merges | grep -v "chore: bump version" || true
+            echo ""
+          else
+            echo "### 🎉 Initial Release"
+            echo ""
+            echo "This is the first release of ccshell!"
+            echo ""
+          fi
+          
+          echo "### 📦 Installation | 安装"
+          echo ""
+          echo "\`\`\`bash"
+          echo "# Global installation | 全局安装"
+          echo "npm install -g ccshell@${VERSION}"
+          echo ""
+          echo "# Or use with npx | 或使用 npx"
+          echo "npx ccshell@${VERSION} \"your task description\""
+          echo "\`\`\`"
+          echo ""
+          echo "### 🚀 Quick Start | 快速开始"
+          echo ""
+          echo "\`\`\`bash"
+          echo "# English"
+          echo "ccshell \"list all files in the current directory\""
+          echo "ccshell \"compress all images in this folder\""
+          echo ""
+          echo "# 中文"
+          echo "ccshell \"列出当前目录下的所有文件\""
+          echo "ccshell \"压缩此文件夹中的所有图片\""
+          echo "\`\`\`"
+          echo ""
+          echo "### ⚠️ Security Notice | 安全提醒"
+          echo ""
+          echo "ccshell uses \`--dangerously-skip-permissions\` by default for smooth experience. Please use in trusted environments only."
+          echo ""
+          echo "ccshell 默认使用 \`--dangerously-skip-permissions\` 参数提供流畅体验，请仅在可信环境中使用。"
+          echo ""
+          echo "---"
+          echo ""
+          echo "📚 **Full Documentation**: [README.md](https://github.com/terryso/ccshell#readme) | [中文文档](https://github.com/terryso/ccshell/blob/main/README.zh.md)"
+        } > changelog.md
+        
+        # Save changelog to output using a different approach
+        {
+          echo "CHANGELOG<<EOF"
+          cat changelog.md
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
       
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ github.ref }}
         name: Release v${{ steps.get_version.outputs.VERSION }}
-        body: |
-          ## ccshell v${{ steps.get_version.outputs.VERSION }} Release
-          
-          🤖 **自然语言macOS shell命令接口** | **Natural Language macOS Shell Command Interface**
-          
-          ### ✨ 主要特性 | Key Features
-          - 🗣️ 自然语言接口，无需记忆命令语法
-          - 📊 实时进度显示和执行状态
-          - 🔧 智能工具管理和自动安装
-          - ⏱️ 无超时限制，支持复杂任务
-          
-          ### 📦 安装方式 | Installation
-          ```bash
-          npm install -g ccshell@${{ steps.get_version.outputs.VERSION }}
-          ```
-          
-          ### 🚀 快速开始 | Quick Start
-          ```bash
-          ccshell "列出当前目录下的所有文件"
-          ccshell "compress all images in this folder"
-          ```
-          
-          ### ⚠️ 安全提醒 | Security Notice
-          ccshell 使用 `--dangerously-skip-permissions` 参数提供流畅体验，请在可信环境中使用。
-          
-          查看详细变更和使用说明请访问 [README.md](https://github.com/terrysoy/ccshell#readme)
-          
+        body: ${{ steps.changelog.outputs.CHANGELOG }}
         draft: false
         prerelease: false
-        generate_release_notes: true
+        generate_release_notes: false
