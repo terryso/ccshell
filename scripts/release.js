@@ -50,7 +50,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"`, { stdio: 'inherit' });
   console.log('  2. If tests pass, package will be published to npm');
   console.log('  3. GitHub Release will be created automatically');
   console.log('\n📊 Monitor progress at:');
-  console.log('  https://github.com/terrysoy/ccshell/actions');
+  console.log('  https://github.com/terryso/ccshell/actions');
   
 } catch (error) {
   console.error('❌ Release failed:', error.message);
