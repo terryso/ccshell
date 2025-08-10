@@ -21,6 +21,7 @@
   "files": [
     "index.js",
     "README.md",
+    "README.zh.md",
     "LICENSE",
     "scripts/"
   ],
