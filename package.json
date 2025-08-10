@@ -1,0 +1,42 @@
+{
+  "name": "ccshell",
+  "version": "0.1.0",
+  "description": "自然语言macOS shell命令接口 - Natural language macOS shell command interface",
+  "main": "index.js",
+  "bin": {
+    "ccshell": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"No tests specified\" && exit 0",
+    "lint": "echo \"No linting configured\" && exit 0",
+    "prepack": "echo \"Preparing package for publication...\""
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "shell",
+    "ai",
+    "macos",
+    "cli",
+    "automation",
+    "claude",
+    "natural-language"
+  ],
+  "author": "Nick",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/terrysoy/ccshell.git"
+  },
+  "bugs": {
+    "url": "https://github.com/terrysoy/ccshell/issues"
+  },
+  "homepage": "https://github.com/terrysoy/ccshell#readme"
+}
