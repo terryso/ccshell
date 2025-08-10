@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod:*)",
+      "Bash(node index.js 列出当前目录下的所有文件)",
+      "Bash(node:*)",
+      "Bash(timeout:*)",
+      "Bash(npm install)",
+      "Bash(npm link:*)",
+      "Bash(ccshell)",
+      "Bash(env)",
+      "Bash(ccshell:*)",
+      "Bash(DEBUG=1 ccshell \"echo hello world\")",
+      "Bash(DEBUG=1 ccshell \"echo test\")",
+      "Bash(unset http_proxy https_proxy all_proxy)",
+      "Bash(export:*)",
+      "Bash(rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm pack:*)",
+      "Bash(git add:*)",
+      "Bash(npm run prepublish-check:*)"
+    ],
+    "deny": []
+  }
+}
