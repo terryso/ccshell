@@ -1,20 +1,91 @@
 #!/usr/bin/env node
 
 const { spawn } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
-// Get user task from command line arguments
-const userTask = process.argv.slice(2).join(' ');
+// Get version from package.json
+function getVersion() {
+  try {
+    const packagePath = path.join(__dirname, 'package.json');
+    const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+    return packageData.version;
+  } catch (error) {
+    return 'unknown';
+  }
+}
 
-// Show usage if no task provided
-if (!userTask) {
-  console.log('用法 / Usage: ccshell <任务描述 / task description>');
+// Show help information
+function showHelp() {
+  console.log('ccshell v' + getVersion() + ' - 自然语言macOS shell命令接口');
+  console.log('Natural Language macOS Shell Command Interface');
+  console.log('');
+  console.log('用法 / Usage:');
+  console.log('  ccshell <任务描述 / task description>');
+  console.log('  ccshell [options]');
+  console.log('');
+  console.log('选项 / Options:');
+  console.log('  -h, --help     显示此帮助信息 / Show this help message');
+  console.log('  -v, --version  显示版本信息 / Show version information');
+  console.log('  --debug        启用调试模式 / Enable debug mode');
   console.log('');
   console.log('示例 / Examples:');
   console.log('  ccshell 批量压缩这个文件夹里的所有图片');
   console.log('  ccshell download the highest quality version of this YouTube video');
   console.log('  ccshell convert all .mov files to .mp4 format');
   console.log('  ccshell 设置一个本地HTTPS服务器，端口8443');
-  process.exit(1);
+  console.log('');
+  console.log('调试模式 / Debug Mode:');
+  console.log('  DEBUG=1 ccshell "你的任务描述"');
+  console.log('  ccshell --debug "你的任务描述"');
+  console.log('');
+  console.log('注意 / Note:');
+  console.log('  ccshell 使用 --dangerously-skip-permissions 参数来提供流畅体验');
+  console.log('  请在可信环境中使用。详情请查看 README.md');
+  console.log('  ccshell uses --dangerously-skip-permissions for smooth experience');
+  console.log('  Please use in trusted environments. See README.md for details');
+}
+
+// Show version information
+function showVersion() {
+  console.log('ccshell v' + getVersion());
+}
+
+// Parse command line arguments
+const args = process.argv.slice(2);
+
+// Handle help and version flags
+if (args.length === 0) {
+  showHelp();
+  process.exit(0);
+}
+
+if (args.includes('-h') || args.includes('--help')) {
+  showHelp();
+  process.exit(0);
+}
+
+if (args.includes('-v') || args.includes('--version')) {
+  showVersion();
+  process.exit(0);
+}
+
+// Check for debug flag
+const hasDebugFlag = args.includes('--debug');
+if (hasDebugFlag) {
+  process.env.DEBUG = '1';
+  // Remove --debug from args
+  const debugIndex = args.indexOf('--debug');
+  args.splice(debugIndex, 1);
+}
+
+// Get user task from remaining arguments
+const userTask = args.join(' ');
+
+// Show help if no task provided after processing flags
+if (!userTask.trim()) {
+  showHelp();
+  process.exit(0);
 }
 
 // Construct the prompt for Claude Code

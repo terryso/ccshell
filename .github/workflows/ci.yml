@@ -45,7 +45,11 @@ jobs:
     - name: Test CLI basic functionality
       run: |
         npm install -g ./ccshell-*.tgz
-        ccshell --help || ccshell 2>/dev/null || echo "CLI basic test completed"
+        ccshell --version
+        ccshell --help
+        ccshell -v
+        ccshell -h
+        echo "All CLI parameter tests completed"
         
   package-test:
     name: Package Test

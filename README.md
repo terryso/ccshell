@@ -12,9 +12,7 @@ ccshell allows you to describe tasks in natural language and automatically conve
 - **🔧 智能工具管理**: 自动检测、安装和使用最适合的命令行工具
 - **⚡ 一键执行**: 从任务描述到结果输出的无缝自动化流程
 - **📊 实时进度**: 显示执行进度、工具使用和任务状态
-- **⏱️ 无超时限制**: 支持长时间运行的复杂任务
 - **🔓 自动授权**: 自动跳过权限检查，流畅执行
-- **🛡️ 安全优先**: 专注于安全的文件处理和转换操作  
 - **🍎 macOS优化**: 针对macOS环境和工具链优化
 
 ## ⚠️ 重要安全提醒 | Important Security Notice
@@ -51,13 +49,21 @@ git clone https://github.com/terryso/ccshell.git
 cd ccshell
 npm install -g .
 
-# 或者使用npm包 (未来发布后) | Or via npm package (when published)
+# 或者使用npm包 | Or via npm package
 # npm install -g ccshell
 ```
 
 ### 基础使用 | Basic Usage
 
 ```bash
+# 获取帮助 | Get Help
+ccshell --help
+ccshell -h
+
+# 查看版本 | Check Version  
+ccshell --version
+ccshell -v
+
 # 中文示例 | Chinese Examples
 ccshell 列出当前目录下的所有文件
 ccshell 批量压缩这个文件夹里的所有图片
@@ -177,6 +183,7 @@ ccshell "echo test"
 # 开启详细调试信息，查看完整的JSON流
 # Enable detailed debug information to see full JSON stream
 DEBUG=1 ccshell "你的任务描述"
+ccshell --debug "你的任务描述"
 
 # 调试输出将显示Claude的详细执行信息
 # Debug output shows detailed Claude execution information

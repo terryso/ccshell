@@ -37,7 +37,9 @@ jobs:
       run: |
         npm pack
         npm install -g ./ccshell-*.tgz
-        ccshell --help || ccshell 2>/dev/null || echo "CLI basic test completed"
+        ccshell --version
+        ccshell --help
+        echo "CLI functionality test completed"
         
   publish:
     name: Publish to NPM
