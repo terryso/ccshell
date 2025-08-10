@@ -41,12 +41,12 @@
   "optionalDependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/terrysoy/ccshell.git"
+    "url": "https://github.com/terryso/ccshell.git"
   },
   "bugs": {
-    "url": "https://github.com/terrysoy/ccshell/issues"
+    "url": "https://github.com/terryso/ccshell/issues"
   },
-  "homepage": "https://github.com/terrysoy/ccshell#readme",
+  "homepage": "https://github.com/terryso/ccshell#readme",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"

@@ -225,8 +225,8 @@ MIT License - 详见 [LICENSE](LICENSE) 文件
 
 ## 📞 支持 | Support
 
-- 🐛 [Issues](https://github.com/terrysoy/ccshell/issues)
-- 💬 [Discussions](https://github.com/terrysoy/ccshell/discussions)
+- 🐛 [Issues](https://github.com/terryso/ccshell/issues)
+- 💬 [Discussions](https://github.com/terryso/ccshell/discussions)
 - 📧 Email: support@ccshell.dev
 
 ---
