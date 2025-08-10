@@ -51,6 +51,9 @@ npm install -g .
 
 # 或通过 npm 包安装
 npm install -g ccshell
+
+# 或直接使用 npx（无需安装）
+npx ccshell "你的任务描述"
 ```
 
 ### 基本用法
@@ -64,11 +67,17 @@ ccshell -h
 ccshell --version
 ccshell -v
 
-# 使用示例
+# 使用示例（全局安装）
 ccshell "列出当前目录下的所有文件"
 ccshell "压缩此文件夹中的所有图片"
 ccshell "将所有 .mov 文件转换为 .mp4 格式"
 ccshell "下载这个 YouTube 视频的最高质量版本"
+
+# 使用示例（npx - 无需安装）
+npx ccshell "列出当前目录下的所有文件"
+npx ccshell "压缩此文件夹中的所有图片"
+npx ccshell "将所有 .mov 文件转换为 .mp4 格式"
+npx ccshell "下载这个 YouTube 视频的最高质量版本"
 
 # 实时进度示例
 🤖 ccshell: 正在处理你的任务...
@@ -88,6 +97,10 @@ ccshell "下载这个 YouTube 视频的最高质量版本"
 ccshell "批量重命名文件并添加时间戳前缀"
 ccshell "查找所有大于 100MB 的文件"
 ccshell "创建以当前日期命名的备份文件夹"
+
+# 或使用 npx
+npx ccshell "批量重命名文件并添加时间戳前缀"
+npx ccshell "查找所有大于 100MB 的文件"
 ```
 
 ### 🎬 媒体处理
@@ -95,6 +108,10 @@ ccshell "创建以当前日期命名的备份文件夹"
 ccshell "将所有 HEIC 照片转换为 JPEG"
 ccshell "在保持合理质量的情况下压缩视频文件大小"
 ccshell "从视频文件中提取音频"
+
+# 或使用 npx
+npx ccshell "将所有 HEIC 照片转换为 JPEG"
+npx ccshell "在保持合理质量的情况下压缩视频文件大小"
 ```
 
 ### 🌐 网络任务
@@ -102,6 +119,10 @@ ccshell "从视频文件中提取音频"
 ccshell "下载网页上的所有图片"
 ccshell "在 8080 端口设置本地 HTTP 服务器"
 ccshell "检查网站响应时间"
+
+# 或使用 npx
+npx ccshell "下载网页上的所有图片"
+npx ccshell "在 8080 端口设置本地 HTTP 服务器"
 ```
 
 ### ⚙️ 系统管理
@@ -109,6 +130,10 @@ ccshell "检查网站响应时间"
 ccshell "清理系统缓存文件"
 ccshell "监控 CPU 和内存使用情况"
 ccshell "查看 8080 端口的使用情况"
+
+# 或使用 npx
+npx ccshell "清理系统缓存文件"
+npx ccshell "监控 CPU 和内存使用情况"
 ```
 
 ## 🔧 工作原理

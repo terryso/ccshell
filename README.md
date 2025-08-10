@@ -51,6 +51,9 @@ npm install -g .
 
 # Or via npm package
 npm install -g ccshell
+
+# Or use directly with npx (no installation required)
+npx ccshell "your task description"
 ```
 
 ### Basic Usage
@@ -64,11 +67,17 @@ ccshell -h
 ccshell --version
 ccshell -v
 
-# Examples
+# Examples (with global installation)
 ccshell "list all files in the current directory"
 ccshell "compress all images in this folder"
 ccshell "convert all .mov files to .mp4 format"
 ccshell "download the highest quality version of this YouTube video"
+
+# Examples (with npx - no installation required)
+npx ccshell "list all files in the current directory"
+npx ccshell "compress all images in this folder"
+npx ccshell "convert all .mov files to .mp4 format"
+npx ccshell "download the highest quality version of this YouTube video"
 
 # Real-time Progress Example
 🤖 ccshell: Processing your task...
@@ -88,6 +97,10 @@ ccshell "download the highest quality version of this YouTube video"
 ccshell "batch rename files with timestamp prefix"
 ccshell "find all files larger than 100MB"
 ccshell "create a backup folder with current date"
+
+# Or with npx
+npx ccshell "batch rename files with timestamp prefix"
+npx ccshell "find all files larger than 100MB"
 ```
 
 ### 🎬 Media Processing
@@ -95,6 +108,10 @@ ccshell "create a backup folder with current date"
 ccshell "convert all HEIC photos to JPEG"
 ccshell "compress video file size while maintaining reasonable quality"
 ccshell "extract audio from video file"
+
+# Or with npx
+npx ccshell "convert all HEIC photos to JPEG"
+npx ccshell "compress video file size while maintaining reasonable quality"
 ```
 
 ### 🌐 Network Tasks
@@ -102,6 +119,10 @@ ccshell "extract audio from video file"
 ccshell "download all images from a webpage"
 ccshell "set up a local HTTP server on port 8080"
 ccshell "check website response time"
+
+# Or with npx
+npx ccshell "download all images from a webpage"
+npx ccshell "set up a local HTTP server on port 8080"
 ```
 
 ### ⚙️ System Management
@@ -109,6 +130,10 @@ ccshell "check website response time"
 ccshell "clean system cache files"
 ccshell "monitor CPU and memory usage"
 ccshell "check port 8080 usage"
+
+# Or with npx
+npx ccshell "clean system cache files"
+npx ccshell "monitor CPU and memory usage"
 ```
 
 ## 🔧 How It Works
