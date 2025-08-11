@@ -1,5 +1,11 @@
 # ccshell
 
+[![GitHub stars](https://img.shields.io/github/stars/terryso/ccshell.svg?style=social&label=Star)](https://github.com/terryso/ccshell)
+[![npm version](https://badge.fury.io/js/ccshell.svg)](https://www.npmjs.com/package/ccshell)
+[![npm downloads](https://img.shields.io/npm/dm/ccshell.svg)](https://www.npmjs.com/package/ccshell)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen.svg)](https://nodejs.org/)
+
 🤖 **Natural Language macOS Shell Command Interface**
 
 [**中文文档**](README.zh.md) | **English**
@@ -43,17 +49,19 @@ Check [Claude Code Security Documentation](https://docs.anthropic.com/en/docs/cl
 
 ### Installation
 
-```bash
-# Install from source
-git clone https://github.com/terryso/ccshell.git
-cd ccshell
-npm install -g .
+📦 **[Available on npm](https://www.npmjs.com/package/ccshell)**
 
-# Or via npm package
+```bash
+# Install from npm (recommended)
 npm install -g ccshell
 
 # Or use directly with npx (no installation required)
 npx ccshell "your task description"
+
+# Or install from source
+git clone https://github.com/terryso/ccshell.git
+cd ccshell
+npm install -g .
 ```
 
 ### Basic Usage
@@ -68,12 +76,16 @@ ccshell --version
 ccshell -v
 
 # Examples (with global installation)
+ccshell "rename all files in current directory to match their content"
+ccshell "send an iMessage to phone number 13487656789: hello"
 ccshell "list all files in the current directory"
 ccshell "compress all images in this folder"
 ccshell "convert all .mov files to .mp4 format"
 ccshell "download the highest quality version of this YouTube video"
 
 # Examples (with npx - no installation required)
+npx ccshell "rename all files in current directory to match their content"
+npx ccshell "send an iMessage to phone number 13487656789: hello"
 npx ccshell "list all files in the current directory"
 npx ccshell "compress all images in this folder"
 npx ccshell "convert all .mov files to .mp4 format"
@@ -94,11 +106,13 @@ npx ccshell "download the highest quality version of this YouTube video"
 
 ### 📁 File Operations
 ```bash
+ccshell "rename all files in current directory to match their content"
 ccshell "batch rename files with timestamp prefix"
 ccshell "find all files larger than 100MB"
 ccshell "create a backup folder with current date"
 
 # Or with npx
+npx ccshell "rename all files in current directory to match their content"
 npx ccshell "batch rename files with timestamp prefix"
 npx ccshell "find all files larger than 100MB"
 ```
@@ -127,11 +141,13 @@ npx ccshell "set up a local HTTP server on port 8080"
 
 ### ⚙️ System Management
 ```bash
+ccshell "send an iMessage to phone number 13487656789: hello"
 ccshell "clean system cache files"
 ccshell "monitor CPU and memory usage"
 ccshell "check port 8080 usage"
 
 # Or with npx
+npx ccshell "send an iMessage to phone number 13487656789: hello"
 npx ccshell "clean system cache files"
 npx ccshell "monitor CPU and memory usage"
 ```
@@ -243,6 +259,10 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 - 🐛 [Issues](https://github.com/terryso/ccshell/issues)
 - 💬 [Discussions](https://github.com/terryso/ccshell/discussions)
+
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=terryso/ccshell&type=Date)](https://www.star-history.com/#terryso/ccshell&Date)
 
 ---
 
