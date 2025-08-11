@@ -18,7 +18,8 @@
       "Bash(mkdir:*)",
       "Bash(npm pack:*)",
       "Bash(git add:*)",
-      "Bash(npm run prepublish-check:*)"
+      "Bash(npm run prepublish-check:*)",
+      "Bash(gemini:*)"
     ],
     "deny": []
   }

@@ -10,20 +10,24 @@
 
 [**中文文档**](README.zh.md) | **English**
 
-ccshell allows you to describe tasks in natural language and automatically converts them to shell commands for execution. Built on Claude Code CLI with intelligent prompt engineering, it simplifies complex command-line operations into intuitive natural language interactions.
+ccshell allows you to describe tasks in natural language and automatically converts them to shell commands for execution. Supporting multiple AI providers (Claude Code CLI and Gemini CLI) with intelligent prompt engineering, it simplifies complex command-line operations into intuitive natural language interactions.
 
 ## ✨ Key Features
 
 - **🗣️ Natural Language Interface**: Describe tasks in natural language without memorizing command syntax
+- **🤖 Multiple AI Providers**: Choose between Claude Code CLI (default, detailed output) and Gemini CLI (YOLO mode)
 - **🔧 Intelligent Tool Management**: Automatically detect, install and use the most suitable command-line tools
 - **⚡ One-Click Execution**: Seamless automation from task description to result output
-- **📊 Real-Time Progress**: Display execution progress, tool usage and task status
-- **🔓 Automatic Authorization**: Automatically skip permission checks for smooth execution
+- **📊 Real-Time Progress**: Display execution progress, tool usage and task status (Claude)
+- **🔓 Flexible Authorization**: Claude uses `--dangerously-skip-permissions`, Gemini uses YOLO mode
 - **🍎 macOS Optimized**: Optimized for macOS environment and toolchain
 
 ## ⚠️ Important Security Notice
 
-**ccshell uses `--dangerously-skip-permissions` parameter by default to provide a smooth user experience, but this poses potential security risks:**
+**ccshell uses different permission strategies for different AI providers, both designed for smooth user experience but with potential security risks:**
+
+- **Claude Code CLI** (default): Uses `--dangerously-skip-permissions` parameter
+- **Gemini CLI**: Uses `--yolo` mode for automatic command execution
 
 ### 🚨 Security Risks
 - **Bypass Permission Checks**: Automatically execute all operations without user confirmation
@@ -43,7 +47,8 @@ Check [Claude Code Security Documentation](https://docs.anthropic.com/en/docs/cl
 ## 📋 Prerequisites
 
 1. **Node.js** (>= 14.0.0)
-2. **Claude Code CLI**: Visit [https://claude.ai/code](https://claude.ai/code) for installation
+2. **Claude Code CLI** (required, default): Visit [https://claude.ai/code](https://claude.ai/code) for installation
+3. **Gemini CLI** (optional): Install Gemini CLI as alternative AI provider
 
 ## 🚀 Quick Start
 
@@ -75,6 +80,11 @@ ccshell -h
 ccshell --version
 ccshell -v
 
+# Configuration
+ccshell --config                    # Show current configuration
+ccshell --set-default gemini        # Set Gemini as default AI provider
+ccshell --set-default claude        # Set Claude as default AI provider
+
 # Examples (with global installation)
 ccshell "rename all files in current directory to match their content"
 ccshell "send an iMessage to phone number 13487656789: hello"
@@ -82,6 +92,10 @@ ccshell "list all files in the current directory"
 ccshell "compress all images in this folder"
 ccshell "convert all .mov files to .mp4 format"
 ccshell "download the highest quality version of this YouTube video"
+
+# Using specific AI provider
+ccshell --provider gemini "compress all images in this folder"
+ccshell --provider claude "convert all .mov files to .mp4 format"
 
 # Examples (with npx - no installation required)
 npx ccshell "rename all files in current directory to match their content"
@@ -91,9 +105,14 @@ npx ccshell "compress all images in this folder"
 npx ccshell "convert all .mov files to .mp4 format"
 npx ccshell "download the highest quality version of this YouTube video"
 
-# Real-time Progress Example
+# Using specific AI provider with npx
+npx ccshell --provider gemini "compress all images in this folder"
+npx ccshell --set-default gemini
+
+# Real-time Progress Example (Claude Code - Default)
 🤖 ccshell: Processing your task...
 📋 Task: list all files in the current directory
+🤖 AI Provider / AI Provider: claude
 🚀 Claude initialization complete, starting task...
 🔧 Executing tool: Bash
 📝 Operation: List all files with details
@@ -119,13 +138,17 @@ npx ccshell "find all files larger than 100MB"
 
 ### 🎬 Media Processing
 ```bash
+# Using default AI provider
 ccshell "convert all HEIC photos to JPEG"
 ccshell "compress video file size while maintaining reasonable quality"
 ccshell "extract audio from video file"
 
+# Using specific AI provider
+ccshell --provider gemini "convert all HEIC photos to JPEG"
+ccshell --provider claude "compress video file size while maintaining reasonable quality"
+
 # Or with npx
-npx ccshell "convert all HEIC photos to JPEG"
-npx ccshell "compress video file size while maintaining reasonable quality"
+npx ccshell --provider gemini "extract audio from video file"
 ```
 
 ### 🌐 Network Tasks
@@ -154,15 +177,26 @@ npx ccshell "monitor CPU and memory usage"
 
 ## 🔧 How It Works
 
-ccshell uses an intelligent **three-tier tool strategy**:
+ccshell supports multiple AI providers and uses an intelligent **three-tier tool strategy**:
 
 1. **Prioritize Local Commands**: Use built-in system tools
 2. **Intelligent Tool Installation**: Auto-install via package managers like brew
 3. **Generate Shell Scripts**: Create custom scripts as fallback option
 
+### Architecture
 ```
-User Input → ccshell Prompt Construction → Claude Code Analysis & Execution → Results
+User Input → ccshell (AI Provider Selection) → AI Analysis & Execution → Results
 ```
+
+### Supported AI Providers
+- **Claude Code CLI** (default): Advanced streaming output with detailed progress and cost tracking
+- **Gemini CLI** (optional): Alternative AI provider with YOLO mode for quick operations
+
+### Configuration Management
+ccshell automatically creates `~/.ccshell.json` to store:
+- Default AI provider selection
+- Provider-specific settings
+- Command arguments and options
 
 ## ⚠️ Security Considerations
 
