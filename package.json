@@ -1,6 +1,6 @@
 {
   "name": "ccshell",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "自然语言macOS shell命令接口 - Natural language macOS shell command interface",
   "main": "index.js",
   "bin": {
