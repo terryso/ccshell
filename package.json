@@ -7,7 +7,16 @@
     "ccshell": "./index.js"
   },
   "scripts": {
-    "test": "echo \"No tests specified\" && exit 0",
+    "test": "DEBUG= NODE_NO_WARNINGS=1 node --test test/*.test.js",
+    "test:coverage": "bash scripts/test-coverage-simple.sh",
+    "test:coverage-full": "bash scripts/test-coverage.sh",
+    "test:watch": "DEBUG= NODE_NO_WARNINGS=1 node --test --watch test/*.test.js",
+    "test:unit": "DEBUG= NODE_NO_WARNINGS=1 node --test test/index.test.js",
+    "test:unit-coverage": "DEBUG= NODE_NO_WARNINGS=1 node --test --experimental-test-coverage test/index.test.js",
+    "test:integration": "DEBUG= NODE_NO_WARNINGS=1 node --test test/integration.test.js",
+    "test:clean": "node scripts/test-clean.js",
+    "test:unit-only": "node scripts/test-unit-only.js",
+    "test:quiet": "DEBUG= node --test --reporter=tap test/*.test.js 2>/dev/null | grep -E '^(not )?ok|^1\\.\\.|^# (PASS|FAIL)'",
     "lint": "echo \"No linting configured\" && exit 0",
     "prepack": "npm run lint && npm test",
     "prepublishOnly": "node scripts/pre-publish-check.js",
@@ -16,7 +25,7 @@
     "release:minor": "node scripts/release.js minor",
     "release:major": "node scripts/release.js major",
     "release": "node scripts/release.js",
-    "ci": "npm ci && npm run lint && npm test"
+    "ci": "npm ci && npm run lint && npm run test:coverage"
   },
   "files": [
     "index.js",
@@ -51,5 +60,15 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
+  },
+  "coverage": {
+    "threshold": {
+      "global": {
+        "branches": 80,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    }
   }
 }

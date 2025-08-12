@@ -19,7 +19,14 @@
       "Bash(npm pack:*)",
       "Bash(git add:*)",
       "Bash(npm run prepublish-check:*)",
-      "Bash(gemini:*)"
+      "Bash(gemini:*)",
+      "Bash(npm test)",
+      "Bash(npm run test:coverage:*)",
+      "Bash(DEBUG= node --test --experimental-test-coverage test/*.test.js)",
+      "Bash(npm run test:clean:*)",
+      "Bash(npm run test:unit-only:*)",
+      "Bash(npm run test:unit-coverage:*)",
+      "Bash(npm run test:unit:*)"
     ],
     "deny": []
   }
