@@ -5,43 +5,27 @@ const path = require('path');
 const os = require('os');
 const { spawn, execSync } = require('child_process');
 
+// Helper function to create unique test config paths
+function createTestConfigPaths() {
+  const testConfigDir = path.join(os.tmpdir(), 'ccshell-test-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9));
+  const testConfigFile = path.join(testConfigDir, '.ccshell.json');
+  return { testConfigDir, testConfigFile };
+}
+
 describe('ccshell index.js', () => {
   let originalArgv;
   let originalEnv;
-  let testConfigDir;
-  let testConfigFile;
 
   beforeEach(() => {
     // Save original values
     originalArgv = [...process.argv];
     originalEnv = { ...process.env };
-    
-    // Create unique test config directory for each test
-    testConfigDir = path.join(os.tmpdir(), 'ccshell-test-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9));
-    testConfigFile = path.join(testConfigDir, '.ccshell.json');
-    
-    // Create test config directory
-    if (!fs.existsSync(testConfigDir)) {
-      fs.mkdirSync(testConfigDir, { recursive: true });
-    }
   });
 
   afterEach(() => {
     // Restore original values
     process.argv = originalArgv;
     Object.assign(process.env, originalEnv);
-    
-    // Clean up test config
-    try {
-      if (fs.existsSync(testConfigFile)) {
-        fs.unlinkSync(testConfigFile);
-      }
-      if (fs.existsSync(testConfigDir)) {
-        fs.rmSync(testConfigDir, { recursive: true, force: true });
-      }
-    } catch (err) {
-      // Ignore cleanup errors
-    }
   });
 
   describe('Utility Functions', () => {
@@ -98,6 +82,13 @@ describe('ccshell index.js', () => {
     });
 
     test('loadConfig file reading logic', () => {
+      const { testConfigDir, testConfigFile } = createTestConfigPaths();
+      
+      // Create test config directory
+      if (!fs.existsSync(testConfigDir)) {
+        fs.mkdirSync(testConfigDir, { recursive: true });
+      }
+      
       const testConfig = {
         defaultProvider: 'gemini',
         providers: {
@@ -106,34 +97,69 @@ describe('ccshell index.js', () => {
         }
       };
       
-      // Write test config
-      fs.writeFileSync(testConfigFile, JSON.stringify(testConfig));
-      
-      // Test file existence and reading
-      assert.ok(fs.existsSync(testConfigFile));
-      const loadedConfig = JSON.parse(fs.readFileSync(testConfigFile, 'utf8'));
-      
-      assert.strictEqual(loadedConfig.defaultProvider, 'gemini');
-      assert.strictEqual(loadedConfig.providers.gemini.args[0], 'chat');
+      try {
+        // Write test config
+        fs.writeFileSync(testConfigFile, JSON.stringify(testConfig));
+        
+        // Test file existence and reading
+        assert.ok(fs.existsSync(testConfigFile));
+        const loadedConfig = JSON.parse(fs.readFileSync(testConfigFile, 'utf8'));
+        
+        assert.strictEqual(loadedConfig.defaultProvider, 'gemini');
+        assert.strictEqual(loadedConfig.providers.gemini.args[0], 'chat');
+      } finally {
+        // Clean up
+        try {
+          if (fs.existsSync(testConfigFile)) {
+            fs.unlinkSync(testConfigFile);
+          }
+          if (fs.existsSync(testConfigDir)) {
+            fs.rmSync(testConfigDir, { recursive: true, force: true });
+          }
+        } catch (err) {
+          // Ignore cleanup errors
+        }
+      }
     });
 
     test('saveConfig file writing logic', () => {
-      const testConfig = { defaultProvider: 'test', providers: {} };
+      const { testConfigDir, testConfigFile } = createTestConfigPaths();
       
-      // Test successful write
-      let writeSuccess = false;
-      try {
-        fs.writeFileSync(testConfigFile, JSON.stringify(testConfig, null, 2));
-        writeSuccess = true;
-      } catch (error) {
-        writeSuccess = false;
+      // Create test config directory
+      if (!fs.existsSync(testConfigDir)) {
+        fs.mkdirSync(testConfigDir, { recursive: true });
       }
       
-      assert.strictEqual(writeSuccess, true);
-      assert.ok(fs.existsSync(testConfigFile));
+      const testConfig = { defaultProvider: 'test', providers: {} };
       
-      const savedConfig = JSON.parse(fs.readFileSync(testConfigFile, 'utf8'));
-      assert.strictEqual(savedConfig.defaultProvider, 'test');
+      try {
+        // Test successful write
+        let writeSuccess = false;
+        try {
+          fs.writeFileSync(testConfigFile, JSON.stringify(testConfig, null, 2));
+          writeSuccess = true;
+        } catch (error) {
+          writeSuccess = false;
+        }
+        
+        assert.strictEqual(writeSuccess, true);
+        assert.ok(fs.existsSync(testConfigFile));
+        
+        const savedConfig = JSON.parse(fs.readFileSync(testConfigFile, 'utf8'));
+        assert.strictEqual(savedConfig.defaultProvider, 'test');
+      } finally {
+        // Clean up
+        try {
+          if (fs.existsSync(testConfigFile)) {
+            fs.unlinkSync(testConfigFile);
+          }
+          if (fs.existsSync(testConfigDir)) {
+            fs.rmSync(testConfigDir, { recursive: true, force: true });
+          }
+        } catch (err) {
+          // Ignore cleanup errors
+        }
+      }
     });
 
     test('saveConfig error handling logic', () => {
@@ -512,6 +538,13 @@ IMPORTANT: Execute the commands and SHOW THE COMPLETE OUTPUT. When you run a com
 
   describe('Configuration File Integration', () => {
     test('should handle config save and load cycle', () => {
+      const { testConfigDir, testConfigFile } = createTestConfigPaths();
+      
+      // Create test config directory
+      if (!fs.existsSync(testConfigDir)) {
+        fs.mkdirSync(testConfigDir, { recursive: true });
+      }
+      
       const testConfig = {
         defaultProvider: 'gemini',
         providers: {
@@ -520,12 +553,26 @@ IMPORTANT: Execute the commands and SHOW THE COMPLETE OUTPUT. When you run a com
         }
       };
       
-      // Save config
-      fs.writeFileSync(testConfigFile, JSON.stringify(testConfig, null, 2));
-      
-      // Load and verify
-      const loadedConfig = JSON.parse(fs.readFileSync(testConfigFile, 'utf8'));
-      assert.deepStrictEqual(loadedConfig, testConfig);
+      try {
+        // Save config
+        fs.writeFileSync(testConfigFile, JSON.stringify(testConfig, null, 2));
+        
+        // Load and verify
+        const loadedConfig = JSON.parse(fs.readFileSync(testConfigFile, 'utf8'));
+        assert.deepStrictEqual(loadedConfig, testConfig);
+      } finally {
+        // Clean up
+        try {
+          if (fs.existsSync(testConfigFile)) {
+            fs.unlinkSync(testConfigFile);
+          }
+          if (fs.existsSync(testConfigDir)) {
+            fs.rmSync(testConfigDir, { recursive: true, force: true });
+          }
+        } catch (err) {
+          // Ignore cleanup errors
+        }
+      }
     });
   });
 
