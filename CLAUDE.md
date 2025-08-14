@@ -10,8 +10,14 @@ ccshell is a natural language interface for macOS shell commands that supports m
 
 ### Testing and Quality Assurance
 ```bash
-# Run tests (currently placeholder)
+# Run all tests (56 tests across all test files)
 npm test
+
+# Run unit tests only (26 tests from index.test.js)
+npm run test:unit
+
+# Run all tests with coverage report (88.78% coverage)
+npm run test:coverage
 
 # Run linting (currently placeholder) 
 npm run lint

@@ -8,8 +8,7 @@
   },
   "scripts": {
     "test": "DEBUG= NODE_NO_WARNINGS=1 node --test test/*.test.js",
-    "test:coverage": "bash scripts/test-coverage-simple.sh",
-    "test:coverage-full": "bash scripts/test-coverage.sh",
+    "test:coverage": "bash scripts/test-coverage-fixed.sh",
     "test:watch": "DEBUG= NODE_NO_WARNINGS=1 node --test --watch test/*.test.js",
     "test:unit": "DEBUG= NODE_NO_WARNINGS=1 node --test test/index.test.js",
     "test:unit-coverage": "DEBUG= NODE_NO_WARNINGS=1 node --test --experimental-test-coverage test/index.test.js",
@@ -48,7 +47,6 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "optionalDependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/terryso/ccshell.git"
@@ -70,5 +68,11 @@
         "statements": 90
       }
     }
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-mock-extended": "^4.0.0",
+    "tap": "^21.1.0",
+    "tap-spec": "^5.0.0"
   }
 }
