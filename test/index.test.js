@@ -5,18 +5,20 @@ const path = require('path');
 const os = require('os');
 const { spawn, execSync } = require('child_process');
 
-// Test directory setup
-const testConfigDir = path.join(os.tmpdir(), 'ccshell-test-' + Date.now());
-const testConfigFile = path.join(testConfigDir, '.ccshell.json');
-
 describe('ccshell index.js', () => {
   let originalArgv;
   let originalEnv;
+  let testConfigDir;
+  let testConfigFile;
 
   beforeEach(() => {
     // Save original values
     originalArgv = [...process.argv];
     originalEnv = { ...process.env };
+    
+    // Create unique test config directory for each test
+    testConfigDir = path.join(os.tmpdir(), 'ccshell-test-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9));
+    testConfigFile = path.join(testConfigDir, '.ccshell.json');
     
     // Create test config directory
     if (!fs.existsSync(testConfigDir)) {
