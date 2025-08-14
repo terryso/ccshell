@@ -4,13 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ccshell is a natural language interface for macOS shell commands that supports multiple AI providers (Claude Code CLI and Gemini CLI) to transform user descriptions into executable shell commands. The tool uses a three-tier strategy: prioritize local commands, install missing tools, and generate shell scripts as fallback.
+ccshell is a natural language interface for macOS shell commands that supports multiple AI providers (Claude Code CLI and Gemini CLI) to transform user descriptions into executable shell commands. The tool uses an enhanced four-tier strategy: 
+1. Check local script library for similar solutions
+2. Prioritize local commands
+3. Install missing tools
+4. Generate and save new shell scripts as fallback
+
+The built-in script library automatically saves and reuses AI-generated scripts, making the tool more efficient for repeated similar tasks.
 
 ## Development Commands
 
 ### Testing and Quality Assurance
 ```bash
-# Run all tests (56 tests across all test files)
+# Run all tests (66 tests across all test files including script library)
 npm test
 
 # Run unit tests only (26 tests from index.test.js)
@@ -59,10 +65,16 @@ DEBUG=1 node index.js "your task description"
 node index.js --config
 node index.js --set-default gemini
 
+# Test script library features
+node index.js --scripts
+node index.js --clean-scripts
+node index.js --disable-library "task description"
+
 # Test after global install
 npm install -g .
 ccshell "your task description"
 ccshell --provider gemini "your task description"
+ccshell --scripts
 ```
 
 ## Architecture
@@ -70,12 +82,13 @@ ccshell --provider gemini "your task description"
 ### Core Components
 
 1. **AIProvider Class** - Abstraction layer supporting multiple AI CLI providers (Claude Code, Gemini CLI)
-2. **Configuration System** - JSON-based config in `~/.ccshell.json` for provider selection and settings
-3. **Prompt Construction** - AI-specific prompt templates optimized for each provider
-4. **Stream Processing** - Handles different output formats (Claude's JSON streaming, Gemini's text output)
-5. **CLI Interface** - Enhanced argument parsing with provider selection and configuration management
-6. **Release Automation** - `scripts/release.js` handles version bumping, git operations, and publishing
-7. **Quality Gates** - `scripts/pre-publish-check.js` validates package before release
+2. **ScriptLibrary Class** - Local script storage and retrieval system with similarity matching
+3. **Configuration System** - JSON-based config in `~/.ccshell.json` for provider selection and script library settings
+4. **Prompt Construction** - AI-specific prompt templates optimized for each provider with script library integration
+5. **Stream Processing** - Handles different output formats (Claude's JSON streaming, Gemini's text output)
+6. **CLI Interface** - Enhanced argument parsing with provider selection, configuration, and script library management
+7. **Release Automation** - `scripts/release.js` handles version bumping, git operations, and publishing
+8. **Quality Gates** - `scripts/pre-publish-check.js` validates package before release
 
 ### Key Design Principles
 
@@ -87,19 +100,25 @@ ccshell --provider gemini "your task description"
 
 ### Prompt Engineering Strategy
 
-The core prompt template encourages:
-1. Prioritizing locally available macOS commands
-2. Installing missing tools via package managers (brew, npm, etc.)  
-3. Writing custom shell scripts only as last resort
+The enhanced prompt template encourages:
+1. Checking local script library for similar solutions first
+2. Prioritizing locally available macOS commands
+3. Installing missing tools via package managers (brew, npm, etc.)  
+4. Writing and saving custom shell scripts as last resort
+
+The AI is provided with relevant scripts from the local library when available, allowing it to reuse or adapt existing solutions for better efficiency and consistency.
 
 ## Key Files
 
-- `index.js` - Main CLI executable with multi-provider support
+- `index.js` - Main CLI executable with multi-provider support and script library
 - `~/.ccshell.json` - User configuration file (auto-created)
+- `~/.ccshell/scripts/` - Local script library directory (auto-created)
+- `~/.ccshell/scripts/index.json` - Script metadata index file
 - `package.json` - NPM package configuration with binary definition
 - `scripts/release.js` - Automated release workflow
 - `scripts/pre-publish-check.js` - Pre-publish validation
 - `docs/brief.md` - Comprehensive project requirements and architecture analysis
+- `test/script-library.test.js` - Comprehensive tests for script library functionality
 
 ## Configuration Management
 
@@ -115,9 +134,15 @@ The core prompt template encourages:
     },
     "gemini": {
       "command": "gemini",
-      "args": ["chat"],
+      "args": ["-p", "--yolo"],
       "streamFormat": "gemini"
     }
+  },
+  "scriptLibrary": {
+    "enabled": true,
+    "maxScripts": 100,
+    "cleanupDays": 30,
+    "scriptDir": "~/.ccshell/scripts"
   }
 }
 ```
@@ -133,7 +158,66 @@ ccshell --set-default claude
 
 # Use specific provider for one command
 ccshell --provider gemini "your task"
+
+# Script library management
+ccshell --scripts                    # List all saved scripts
+ccshell --clean-scripts             # Remove old scripts
+ccshell --disable-library "task"    # Disable script library for this run
 ```
+
+## Script Library System
+
+### Overview
+
+The script library automatically saves AI-generated scripts for future reuse, implementing an intelligent caching system that:
+
+- **Automatically detects and saves** shell scripts generated by AI providers
+- **Searches for similar tasks** using keyword matching algorithm  
+- **Provides relevant scripts** to AI providers during prompt construction
+- **Manages script lifecycle** with configurable cleanup and limits
+
+### Features
+
+- **Smart Detection**: Identifies scripts from tool outputs (Write tool) and text parsing (code blocks, command sequences)
+- **Similarity Matching**: Uses keyword-based scoring to find relevant scripts for new tasks
+- **Metadata Tracking**: Records task description, creation/update time, usage count
+- **Storage Management**: Configurable cleanup (default: 30 days) and limits (default: 100 scripts)
+- **Deduplication**: Prevents saving identical scripts multiple times
+
+### Storage Structure
+
+```
+~/.ccshell/
+├── scripts/           # Script files directory
+│   ├── abc123def456.sh    # Script files (12-char hash IDs)
+│   ├── fed654cba321.sh
+│   └── index.json         # Metadata index
+└── .ccshell.json      # Configuration file
+```
+
+### Script Metadata Format
+
+```json
+[
+  {
+    "id": "abc123def456",
+    "task": "批量压缩jpg图片文件",
+    "file": "/Users/name/.ccshell/scripts/abc123def456.sh",
+    "created": "2024-01-01T10:30:00.000Z",
+    "updated": "2024-01-01T10:30:00.000Z",
+    "usage": 1,
+    "type": "text",
+    "filePath": null
+  }
+]
+```
+
+### Configuration Options
+
+- `enabled`: Enable/disable script library (default: true)
+- `maxScripts`: Maximum number of scripts to keep (default: 100)
+- `cleanupDays`: Days after which unused scripts are cleaned up (default: 30)
+- `scriptDir`: Directory path for script storage (default: ~/.ccshell/scripts)
 
 ## Development Notes
 

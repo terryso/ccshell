@@ -26,8 +26,21 @@
       "Bash(npm run test:clean:*)",
       "Bash(npm run test:unit-only:*)",
       "Bash(npm run test:unit-coverage:*)",
-      "Bash(npm run test:unit:*)"
+      "Bash(npm run test:unit:*)",
+      "Bash(DEBUG=1 node --test --experimental-test-coverage test/*.test.js)",
+      "Bash(NODE_NO_WARNINGS=1 node --test --experimental-test-coverage test/coverage.test.js)",
+      "Bash(NODE_NO_WARNINGS=1 node --test --experimental-test-coverage test/*.test.js)",
+      "Bash(bash:*)",
+      "Bash(git restore:*)",
+      "Bash(DEBUG= NODE_NO_WARNINGS=1 node --test test/unit-coverage.test.js)",
+      "Bash(npm test:*)",
+      "Bash(mv:*)",
+      "Bash(git rm:*)",
+      "Bash(DEBUG= NODE_NO_WARNINGS=1 node --test test/script-library.test.js)"
     ],
-    "deny": []
+    "deny": [],
+    "additionalDirectories": [
+      "/Users/nick/.ccshell/scripts"
+    ]
   }
 }

@@ -12,10 +12,46 @@
 
 ccshell 让你能够用自然语言描述任务，并自动转换为 shell 命令执行。支持多种 AI 提供商（Claude Code CLI 和 Gemini CLI）和智能提示工程，将复杂的命令行操作简化为直观的自然语言交互。
 
+## 🔧 工作原理
+
+ccshell 使用智能的**四层策略**和内置脚本库：
+
+```mermaid
+flowchart TD
+    A[🤖 ccshell: 自然语言输入] --> B{1. 检查本地命令}
+    B -->|✅ 可用| C[执行内置工具]
+    B -->|❌ 不可用| D{2. 搜索在线方案}
+    D -->|✅ 找到并安装| E[执行在线工具]
+    D -->|❌ 未找到| F{3. 检查脚本库}
+    F -->|✅ 找到相似脚本| G[重用现有脚本]
+    F -->|❌ 无匹配| H[4. 生成新脚本]
+    
+    C --> I[✅ 任务完成]
+    E --> I
+    G --> J[📈 更新使用次数]
+    J --> I
+    H --> K[💾 自动保存到库]
+    K --> I
+    
+    style A fill:#e1f5fe
+    style I fill:#e8f5e8
+    style C fill:#fff3e0
+    style E fill:#fff3e0
+    style G fill:#f3e5f5
+    style H fill:#ffebee
+```
+
+**策略详情：**
+1. **优先本地命令** → 使用内置系统工具
+2. **搜索在线方案** → 通过包管理器查找和安装现有工具
+3. **重用脚本库** → 检查本地库中来自之前任务的相似解决方案  
+4. **生成新脚本** → 创建自定义脚本作为最终后备选项
+
 ## ✨ 主要特性
 
 - **🗣️ 自然语言接口**：用自然语言描述任务，无需记忆命令语法
 - **🤖 多 AI 提供商**：可选择 Claude Code CLI（默认，详细输出）或 Gemini CLI（YOLO 模式）
+- **📚 智能脚本库**：自动保存和重用 AI 生成的脚本，用于未来相似任务
 - **🔧 智能工具管理**：自动检测、安装和使用最合适的命令行工具
 - **⚡ 一键执行**：从任务描述到结果输出的无缝自动化
 - **📊 实时进度显示**：显示执行进度、工具使用情况和任务状态（Claude）
@@ -80,10 +116,17 @@ ccshell -h
 ccshell --version
 ccshell -v
 
-# 配置管理
+# 配置和脚本管理
 ccshell --config                    # 显示当前配置
 ccshell --set-default gemini        # 设置 Gemini 为默认 AI 提供商
 ccshell --set-default claude        # 设置 Claude 为默认 AI 提供商
+
+# 脚本库管理
+ccshell --scripts                   # 查看所有已保存的脚本
+ccshell --delete-script <id>        # 根据 ID 删除指定脚本
+ccshell --clean-scripts             # 删除超过 30 天的旧脚本
+ccshell --clean-orphaned            # 清理孤儿脚本文件
+ccshell --disable-library "任务"     # 对一个命令禁用脚本库
 
 # 使用示例（全局安装）
 ccshell "将当前目录下面所有文件重新命名, 名字需要和文件内容相符"
@@ -178,13 +221,43 @@ npx ccshell "清理系统缓存文件"
 npx ccshell "监控 CPU 和内存使用情况"
 ```
 
-## 🔧 工作原理
+### 📚 脚本库管理
+```bash
+# 查看所有保存的脚本及其元数据
+ccshell --scripts
 
-ccshell 支持多种 AI 提供商并使用智能的**三层工具策略**：
+# 示例输出：
+# 📚 本地脚本库 / Local Script Library:
+# 总计 3 个脚本：
+# Total 3 scripts:
+# 
+# 1. 创建备份脚本
+#    ID: bf531412e061
+#    创建: 2025/8/14 下午5:15:04
+#    更新: 2025/8/14 下午5:15:04
+#    使用次数: 2
 
-1. **优先使用本地命令**：使用内置系统工具
-2. **智能工具安装**：通过 brew 等包管理器自动安装
-3. **生成 Shell 脚本**：创建自定义脚本作为后备选项
+# 根据 ID 删除指定脚本
+ccshell --delete-script bf531412e061
+
+# 清理旧脚本（超过30天）
+ccshell --clean-scripts
+
+# 移除孤儿脚本文件
+ccshell --clean-orphaned
+
+# 对一个命令禁用脚本库
+ccshell --disable-library "创建一个新的备份脚本"
+```
+
+## 📚 脚本库系统
+
+内置的**脚本库**自动保存并优化您的工作流程：
+
+- 💾 **自动保存脚本**：AI 生成的脚本自动保存供未来重用
+- 🔍 **智能匹配**：使用基于关键词的相似度评分来查找相关的现有脚本
+- 🗂️ **有序存储**：脚本存储在 `~/.ccshell/scripts/` 目录中，带有元数据跟踪
+- ⚡ **快速访问**：重用已验证的解决方案，无需从头重新生成
 
 ### 架构流程
 ```

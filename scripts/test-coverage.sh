@@ -5,7 +5,7 @@ echo ""
 
 # Run unit tests silently to get counts
 TEMP_OUTPUT=$(mktemp)
-DEBUG= NODE_NO_WARNINGS=1 node --test test/index.test.js > "$TEMP_OUTPUT" 2>&1
+DEBUG= NODE_NO_WARNINGS=1 node --test test/*.test.js > "$TEMP_OUTPUT" 2>&1
 
 # Extract test counts
 PASSING=$(grep "ℹ pass" "$TEMP_OUTPUT" | sed 's/.*pass \([0-9]*\).*/\1/')
@@ -25,7 +25,7 @@ echo "📈 Coverage Report:"
 
 # Generate coverage report from unit tests only
 TEMP_COVERAGE=$(mktemp)
-FORCE_COLOR=1 DEBUG= NODE_NO_WARNINGS=1 node --test --experimental-test-coverage test/index.test.js > "$TEMP_COVERAGE" 2>&1
+FORCE_COLOR=1 DEBUG= NODE_NO_WARNINGS=1 node --test --experimental-test-coverage test/*.test.js > "$TEMP_COVERAGE" 2>&1
 
 # Extract and display coverage table with colors preserved
 sed -n '/start of coverage report/,/end of coverage report/p' "$TEMP_COVERAGE" | 

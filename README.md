@@ -12,10 +12,46 @@
 
 ccshell allows you to describe tasks in natural language and automatically converts them to shell commands for execution. Supporting multiple AI providers (Claude Code CLI and Gemini CLI) with intelligent prompt engineering, it simplifies complex command-line operations into intuitive natural language interactions.
 
+## 🔧 How It Works
+
+ccshell uses an intelligent **four-tier strategy** with built-in script library:
+
+```mermaid
+flowchart TD
+    A[🤖 ccshell: Natural Language Input] --> B{1. Check Local Commands}
+    B -->|✅ Available| C[Execute Built-in Tools]
+    B -->|❌ Not Available| D{2. Search Online Solutions}
+    D -->|✅ Found & Installed| E[Execute Online Tools]
+    D -->|❌ Not Found| F{3. Check Script Library}
+    F -->|✅ Similar Script Found| G[Reuse Existing Script]
+    F -->|❌ No Match| H[4. Generate New Script]
+    
+    C --> I[✅ Task Complete]
+    E --> I
+    G --> J[📈 Update Usage Count]
+    J --> I
+    H --> K[💾 Auto-save to Library]
+    K --> I
+    
+    style A fill:#e1f5fe
+    style I fill:#e8f5e8
+    style C fill:#fff3e0
+    style E fill:#fff3e0
+    style G fill:#f3e5f5
+    style H fill:#ffebee
+```
+
+**Strategy Details:**
+1. **Prioritize Local Commands** → Use built-in system tools
+2. **Search Online Solutions** → Find and install existing tools via package managers  
+3. **Reuse Script Library** → Check local library for similar solutions from previous tasks
+4. **Generate New Scripts** → Create custom scripts as final fallback option
+
 ## ✨ Key Features
 
 - **🗣️ Natural Language Interface**: Describe tasks in natural language without memorizing command syntax
 - **🤖 Multiple AI Providers**: Choose between Claude Code CLI (default, detailed output) and Gemini CLI (YOLO mode)
+- **📚 Smart Script Library**: Automatically saves and reuses AI-generated scripts for future similar tasks
 - **🔧 Intelligent Tool Management**: Automatically detect, install and use the most suitable command-line tools
 - **⚡ One-Click Execution**: Seamless automation from task description to result output
 - **📊 Real-Time Progress**: Display execution progress, tool usage and task status (Claude)
@@ -80,10 +116,17 @@ ccshell -h
 ccshell --version
 ccshell -v
 
-# Configuration
+# Configuration and Script Management
 ccshell --config                    # Show current configuration
 ccshell --set-default gemini        # Set Gemini as default AI provider
 ccshell --set-default claude        # Set Claude as default AI provider
+
+# Script Library Management
+ccshell --scripts                   # View all saved scripts
+ccshell --delete-script <id>        # Delete specific script by ID
+ccshell --clean-scripts             # Remove scripts older than 30 days
+ccshell --clean-orphaned            # Clean up orphaned script files
+ccshell --disable-library "task"    # Disable script library for one command
 
 # Examples (with global installation)
 ccshell "rename all files in current directory to match their content"
@@ -175,13 +218,43 @@ npx ccshell "clean system cache files"
 npx ccshell "monitor CPU and memory usage"
 ```
 
-## 🔧 How It Works
+### 📚 Script Library Management
+```bash
+# View all saved scripts with metadata
+ccshell --scripts
 
-ccshell supports multiple AI providers and uses an intelligent **three-tier tool strategy**:
+# Example output:
+# 📚 本地脚本库 / Local Script Library:
+# 总计 3 个脚本：
+# Total 3 scripts:
+# 
+# 1. Create backup script
+#    ID: bf531412e061
+#    Created: 8/14/2025, 5:15:04 PM
+#    Updated: 8/14/2025, 5:15:04 PM
+#    Usage: 2
 
-1. **Prioritize Local Commands**: Use built-in system tools
-2. **Intelligent Tool Installation**: Auto-install via package managers like brew
-3. **Generate Shell Scripts**: Create custom scripts as fallback option
+# Delete specific script by ID
+ccshell --delete-script bf531412e061
+
+# Clean up old scripts (>30 days)
+ccshell --clean-scripts
+
+# Remove orphaned script files
+ccshell --clean-orphaned
+
+# Disable script library for one command
+ccshell --disable-library "create a new backup script"
+```
+
+## 📚 Script Library System
+
+The built-in **Script Library** automatically saves and optimizes your workflow:
+
+- 💾 **Auto-saves scripts**: AI-generated scripts are automatically saved for future reuse
+- 🔍 **Smart matching**: Uses keyword-based similarity scoring to find relevant existing scripts  
+- 🗂️ **Organized storage**: Scripts stored in `~/.ccshell/scripts/` with metadata tracking
+- ⚡ **Quick access**: Reuse proven solutions without regenerating from scratch
 
 ### Architecture
 ```
