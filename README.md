@@ -18,27 +18,29 @@ ccshell uses an intelligent **four-tier strategy** with built-in script library:
 
 ```mermaid
 flowchart TD
-    A[🤖 ccshell: Natural Language Input] --> B{1. Check Local Commands}
-    B -->|✅ Available| C[Execute Built-in Tools]
-    B -->|❌ Not Available| D{2. Search Online Solutions}
-    D -->|✅ Found & Installed| E[Execute Online Tools]
-    D -->|❌ Not Found| F{3. Check Script Library}
-    F -->|✅ Similar Script Found| G[Reuse Existing Script]
-    F -->|❌ No Match| H[4. Generate New Script]
+    A["🤖 Natural Language Input<br/>ccshell 'your task'"] --> B{"🔍 Local Commands<br/>Available?"}
+    B -->|"✅ YES"| C["⚡ Execute<br/>Built-in Tools"]
+    B -->|"❌ NO"| D{"🌐 Online Tools<br/>Found?"}
+    D -->|"✅ YES"| E["📦 Install & Execute<br/>Online Tools"]
+    D -->|"❌ NO"| F{"📚 Script Library<br/>Match Found?"}
+    F -->|"✅ YES"| G["🔄 Reuse<br/>Existing Script"]
+    F -->|"❌ NO"| H["🆕 Generate<br/>New Script"]
     
-    C --> I[✅ Task Complete]
+    C --> I["✅ COMPLETE"]
     E --> I
-    G --> J[📈 Update Usage Count]
+    G --> I
+    H --> J["💾 Save to Library"]
     J --> I
-    H --> K[💾 Auto-save to Library]
-    K --> I
     
-    style A fill:#e1f5fe
-    style I fill:#e8f5e8
-    style C fill:#fff3e0
-    style E fill:#fff3e0
-    style G fill:#f3e5f5
-    style H fill:#ffebee
+    classDef inputNode fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000,font-size:14px
+    classDef processNode fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000,font-size:13px
+    classDef decisionNode fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000,font-size:13px
+    classDef completeNode fill:#e8f5e8,stroke:#388e3c,stroke-width:3px,color:#000,font-size:14px
+    
+    class A inputNode
+    class C,E,G,H,J processNode
+    class B,D,F decisionNode
+    class I completeNode
 ```
 
 **Strategy Details:**

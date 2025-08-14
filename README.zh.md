@@ -18,27 +18,29 @@ ccshell 使用智能的**四层策略**和内置脚本库：
 
 ```mermaid
 flowchart TD
-    A[🤖 ccshell: 自然语言输入] --> B{1. 检查本地命令}
-    B -->|✅ 可用| C[执行内置工具]
-    B -->|❌ 不可用| D{2. 搜索在线方案}
-    D -->|✅ 找到并安装| E[执行在线工具]
-    D -->|❌ 未找到| F{3. 检查脚本库}
-    F -->|✅ 找到相似脚本| G[重用现有脚本]
-    F -->|❌ 无匹配| H[4. 生成新脚本]
+    A["🤖 自然语言输入<br/>ccshell '你的任务'"] --> B{"🔍 本地命令<br/>是否可用?"}
+    B -->|"✅ 是"| C["⚡ 执行<br/>内置工具"]
+    B -->|"❌ 否"| D{"🌐 在线工具<br/>是否找到?"}
+    D -->|"✅ 是"| E["📦 安装并执行<br/>在线工具"]
+    D -->|"❌ 否"| F{"📚 脚本库<br/>是否匹配?"}
+    F -->|"✅ 是"| G["🔄 重用<br/>现有脚本"]
+    F -->|"❌ 否"| H["🆕 生成<br/>新脚本"]
     
-    C --> I[✅ 任务完成]
+    C --> I["✅ 完成"]
     E --> I
-    G --> J[📈 更新使用次数]
+    G --> I
+    H --> J["💾 保存到库"]
     J --> I
-    H --> K[💾 自动保存到库]
-    K --> I
     
-    style A fill:#e1f5fe
-    style I fill:#e8f5e8
-    style C fill:#fff3e0
-    style E fill:#fff3e0
-    style G fill:#f3e5f5
-    style H fill:#ffebee
+    classDef inputNode fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000,font-size:14px
+    classDef processNode fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000,font-size:13px
+    classDef decisionNode fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000,font-size:13px
+    classDef completeNode fill:#e8f5e8,stroke:#388e3c,stroke-width:3px,color:#000,font-size:14px
+    
+    class A inputNode
+    class C,E,G,H,J processNode
+    class B,D,F decisionNode
+    class I completeNode
 ```
 
 **策略详情：**
