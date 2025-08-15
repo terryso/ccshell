@@ -54,10 +54,51 @@ class ScriptLibrary {
     if (!this.enabled) return [];
     try {
       const data = fs.readFileSync(this.indexFile, 'utf8');
-      return JSON.parse(data);
+      const index = JSON.parse(data);
+      return this.migrateIndex(index);
     } catch (error) {
       return [];
     }
+  }
+
+  migrateIndex(index) {
+    let needsSave = false;
+    const migratedIndex = [];
+
+    for (const entry of index) {
+      // Check if this is a legacy entry (has 'name' field instead of 'id')
+      if (entry.name && !entry.id) {
+        // Skip legacy entries - they should be manually cleaned up
+        needsSave = true;
+        continue;
+      }
+
+      // Ensure all current entries have required fields
+      if (entry.id && entry.task) {
+        const migratedEntry = {
+          id: entry.id,
+          task: entry.task,
+          filePath: entry.filePath || entry.file, // Support both field names
+          created: entry.created || new Date().toISOString(),
+          updated: entry.updated || new Date().toISOString(),
+          usage: entry.usage || 1,
+          type: entry.type || 'text'
+        };
+        migratedIndex.push(migratedEntry);
+        
+        // Check if migration was needed
+        if (!entry.created || !entry.updated || !entry.type || entry.file) {
+          needsSave = true;
+        }
+      }
+    }
+
+    // Save migrated index if changes were made
+    if (needsSave) {
+      this.saveIndex(migratedIndex);
+    }
+
+    return migratedIndex;
   }
 
   saveIndex(index) {
@@ -131,7 +172,7 @@ class ScriptLibrary {
         created: existingIndex === -1 ? timestamp : index[existingIndex].created,
         updated: timestamp,
         usage: existingIndex === -1 ? 1 : index[existingIndex].usage + 1,
-        type: metadata.type || 'script'
+        type: metadata.type || 'text'
       };
 
       if (existingIndex === -1) {

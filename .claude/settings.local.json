@@ -36,7 +36,9 @@
       "Bash(npm test:*)",
       "Bash(mv:*)",
       "Bash(git rm:*)",
-      "Bash(DEBUG= NODE_NO_WARNINGS=1 node --test test/script-library.test.js)"
+      "Bash(DEBUG= NODE_NO_WARNINGS=1 node --test test/script-library.test.js)",
+      "Bash(DEBUG=1 node index.js \"列出当前目录下的所有文件\")",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "additionalDirectories": [
