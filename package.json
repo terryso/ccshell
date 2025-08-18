@@ -70,7 +70,7 @@
     }
   },
   "devDependencies": {
-    "jest": "^29.7.0",
+    "jest": "^30.0.5",
     "jest-mock-extended": "^4.0.0",
     "tap": "^21.1.0",
     "tap-spec": "^5.0.0"
