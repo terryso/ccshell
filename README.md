@@ -1,5 +1,6 @@
 # ccshell
 
+[![BMAD](https://bmad-badge.vercel.app/terryso/ccshell.svg)](https://github.com/bmad-code-org/BMAD-METHOD)
 [![GitHub stars](https://img.shields.io/github/stars/terryso/ccshell.svg?style=social&label=Star)](https://github.com/terryso/ccshell)
 [![npm version](https://badge.fury.io/js/ccshell.svg)](https://www.npmjs.com/package/ccshell)
 [![npm downloads](https://img.shields.io/npm/dm/ccshell.svg)](https://www.npmjs.com/package/ccshell)
